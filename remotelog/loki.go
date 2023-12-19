@@ -38,6 +38,9 @@ type entry struct {
 
 type Loki struct {
 	URL       string
+	Username  string
+	Password  string
+	Tenant    string
 	BatchWait time.Duration
 	BatchSize int
 	entry
@@ -47,6 +50,9 @@ func (l *Loki) setup() error {
 	l.BatchSize = config.Setting.LokiBulk * 1024
 	l.BatchWait = time.Duration(config.Setting.LokiTimer) * time.Second
 	l.URL = config.Setting.LokiURL
+	l.Tenant = config.Setting.LokiTenant
+	l.Username = config.Setting.LokiUser
+	l.Password = config.Setting.LokiPass
 
 	u, err := url.Parse(l.URL)
 	if err != nil {
@@ -206,6 +212,12 @@ func (l *Loki) send(ctx context.Context, buf []byte) (int, error) {
 	}
 	req = req.WithContext(ctx)
 	req.Header.Set("Content-Type", contentType)
+	if l.Tenant != "" {
+		req.Header.Set("X-Scope-OrgID", l.Tenant)
+	}
+	if l.Username != "" && l.Password != "" {
+		req.SetBasicAuth(l.Username, l.Password)
+	}
 
 	resp, err := http.DefaultClient.Do(req)
 	if err != nil {

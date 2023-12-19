@@ -15,6 +15,9 @@ type HeplifyServer struct {
 	ESUser             string   `default:""`
 	ESPass             string   `default:""`
 	LokiURL            string   `default:""`
+	LokiUser           string   `default:""`
+	LokiPass           string   `default:""`
+	LokiTenant         string   `default:""`
 	LokiBulk           int      `default:"400"`
 	LokiTimer          int      `default:"4"`
 	LokiBuffer         int      `default:"100000"`
