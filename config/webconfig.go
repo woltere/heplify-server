@@ -32,6 +32,12 @@ func WebConfig(r *http.Request) (*HeplifyServer, error) {
 		webSetting.ESDiscovery = false
 	}
 	webSetting.LokiURL = r.FormValue("LokiURL")
+	webSetting.LokiUser = r.FormValue("LokiUser")
+	LokiPass := r.FormValue("LokiPass")
+	if LokiPass != "*******" {
+		webSetting.LokiPass = LokiPass
+	}
+	webSetting.LokiTenant = r.FormValue("LokiTenant")
 	if webSetting.LokiBulk, err = strconv.Atoi(r.FormValue("LokiBulk")); err != nil {
 		return nil, err
 	}
@@ -209,6 +215,18 @@ var WebForm = `
 		<div>
 			<label>LokiURL</label>
 			<input  type="text" name="LokiURL" placeholder="{{.LokiURL}}" value="{{.LokiURL}}">
+		</div>
+		<div>
+			<label>LokiUser</label>
+			<input  type="text" name="LokiUser" placeholder="{{.LokiUser}}" value="{{.LokiUser}}">
+		</div>
+		<div>
+			<label>LokiPass</label>
+			<input  type="text" name="LokiPass" placeholder="*******" value="*******">
+		</div>
+		<div>
+			<label>LokiTenant</label>
+			<input  type="text" name="LokiTenant" placeholder="{{.LokiTenant}}" value="{{.LokiTenant}}">
 		</div>
 		<div>
 			<label>LokiBulk</label>
